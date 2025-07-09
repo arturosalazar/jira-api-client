@@ -36,11 +36,8 @@ build/
 *.class
 *.jar
 *.war
-*.iml
 *.log
 
-### Maven ###
-target/
 
 ### OS Files ###
 .DS_Store
@@ -48,7 +45,6 @@ Thumbs.db
 
 ### Logs ###
 logs/
-*.log
 
 ### Others ###
 .env
