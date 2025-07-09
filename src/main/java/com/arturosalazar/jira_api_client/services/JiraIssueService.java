@@ -1,5 +1,6 @@
 package com.arturosalazar.jira_api_client.services;
 
+import com.arturosalazar.jira_api_client.dto.JiraIssueRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class JiraIssueService {
         this.restTemplate = restTemplate;
     }
 
-    public void createIssue(){
+    public void createIssue(JiraIssueRequest jiraIssueRequest){
         // Request headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -35,13 +36,13 @@ public class JiraIssueService {
         headers.set("Authorization", "Basic " + encodedAuthString);
 
         // Request body
-        String requestBody = """
+        String requestBody = String.format("""
                 {
                   "fields": {
                     "project": {
                       "key": "SCRUM"
                     },
-                    "summary": "Example Task Summary",
+                    "summary": "%s",
                     "description": {
                       "type": "doc",
                       "version": 1,
@@ -51,19 +52,19 @@ public class JiraIssueService {
                           "content": [
                             {
                               "type": "text",
-                              "text": "This is a simple task created via the Jira API."
+                              "text": "%s"
                             }
                           ]
                         }
                       ]
                     },
                     "issuetype": {
-                      "name": "Task"
+                      "name": "%s"
                     }
                   }
                 }
                 
-                """;
+                """, jiraIssueRequest.getSummary(), jiraIssueRequest.getDescription(), jiraIssueRequest.getIssueType());
 
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
 
