@@ -10,7 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 @SpringBootApplication
 public class JiraApiClientApplication {
 
-	private JiraIssueService jiraIssueService;
+	final private JiraIssueService jiraIssueService;
 
 	public JiraApiClientApplication(JiraIssueService jiraIssueService){
 		this.jiraIssueService = jiraIssueService;
