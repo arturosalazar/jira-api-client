@@ -1,6 +1,7 @@
 package com.arturosalazar.jira_api_client;
 
 import com.arturosalazar.jira_api_client.config.ProjectConfig;
+import com.arturosalazar.jira_api_client.dto.JiraIssueRequest;
 import com.arturosalazar.jira_api_client.services.JiraIssueService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,7 @@ public class JiraApiClientApplication {
 
 	@PostConstruct
 	public void init(){
-		jiraIssueService.createIssue();
+		JiraIssueRequest jiraIssueRequest = new JiraIssueRequest("Create new transfer object", "Create a new transfer object to transfer data to JiraIssueRequest", "Task");
+		jiraIssueService.createIssue(jiraIssueRequest);
 	}
 }
