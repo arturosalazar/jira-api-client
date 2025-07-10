@@ -1,6 +1,9 @@
 package com.arturosalazar.jira_api_client.services;
 
 import com.arturosalazar.jira_api_client.dto.JiraIssueRequest;
+import com.arturosalazar.jira_api_client.dto.JiraIssueResponse;
+import com.arturosalazar.jira_api_client.entities.JiraIssueEntity;
+import com.arturosalazar.jira_api_client.repositories.JiraIssueRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -22,11 +25,14 @@ public class JiraIssueService {
 
     private RestTemplate restTemplate;
 
-    public JiraIssueService(RestTemplate restTemplate){
+    private JiraIssueRepository jiraIssueRepository;
+
+    public JiraIssueService(RestTemplate restTemplate, JiraIssueRepository jiraIssueRepository){
         this.restTemplate = restTemplate;
+        this.jiraIssueRepository = jiraIssueRepository;
     }
 
-    public ResponseEntity<String> createIssue(JiraIssueRequest jiraIssueRequest){
+    public ResponseEntity<JiraIssueResponse> createIssue(JiraIssueRequest jiraIssueRequest){
         // Request headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -70,12 +76,27 @@ public class JiraIssueService {
 
         // Request domain
         String requestDomain = jiraDomain + "/rest/api/3/issue";
-        ResponseEntity<String> response = restTemplate.exchange(
+        ResponseEntity<JiraIssueResponse> response = restTemplate.exchange(
                 requestDomain,          // URL
                 HttpMethod.POST,        // HTTP Method
                 requestEntity,          // Request Entity (body and headers)
-                String.class            // Expected Response Type
+                JiraIssueResponse.class            // Expected Response Type
         );
+
+        // If Jira Issue created, then save information to database
+        if(response.getStatusCode().is2xxSuccessful()){
+            // Use DTO to retrieve data from response
+            JiraIssueResponse responseBody = response.getBody();
+
+            JiraIssueEntity entity = new JiraIssueEntity();
+            entity.setSummary(jiraIssueRequest.getSummary());
+            entity.setDescription(jiraIssueRequest.getDescription());
+            entity.setJiraIssueType(jiraIssueRequest.getIssueType());
+            entity.setJiraKey(responseBody.getKey());
+            entity.setJiraID(responseBody.getId());
+
+            jiraIssueRepository.save(entity);
+        }
 
         System.out.println(response.getBody());
         System.out.println(response.getStatusCode());
