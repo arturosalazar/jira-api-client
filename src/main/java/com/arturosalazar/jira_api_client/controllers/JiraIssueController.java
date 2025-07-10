@@ -2,6 +2,7 @@ package com.arturosalazar.jira_api_client.controllers;
 
 import com.arturosalazar.jira_api_client.dto.JiraIssueRequest;
 import com.arturosalazar.jira_api_client.services.JiraIssueService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ public class JiraIssueController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> handleCreateIssueRequest(@RequestBody JiraIssueRequest jiraIssueRequest){
+    public ResponseEntity<String> handleCreateIssueRequest(@RequestBody @Valid JiraIssueRequest jiraIssueRequest){
         return jiraIssueService.createIssue(jiraIssueRequest);
     }
 }
