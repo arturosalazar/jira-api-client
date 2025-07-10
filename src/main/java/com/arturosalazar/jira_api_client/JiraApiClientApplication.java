@@ -22,9 +22,4 @@ public class JiraApiClientApplication {
 		SpringApplication.run(JiraApiClientApplication.class, args);
 	}
 
-	@PostConstruct
-	public void init(){
-		JiraIssueRequest jiraIssueRequest = new JiraIssueRequest("Create new transfer object", "Create a new transfer object to transfer data to JiraIssueRequest", "Task");
-		jiraIssueService.createIssue(jiraIssueRequest);
-	}
 }

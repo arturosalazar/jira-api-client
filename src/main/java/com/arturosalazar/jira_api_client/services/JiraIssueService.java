@@ -26,7 +26,7 @@ public class JiraIssueService {
         this.restTemplate = restTemplate;
     }
 
-    public void createIssue(JiraIssueRequest jiraIssueRequest){
+    public ResponseEntity<String> createIssue(JiraIssueRequest jiraIssueRequest){
         // Request headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -79,6 +79,8 @@ public class JiraIssueService {
 
         System.out.println(response.getBody());
         System.out.println(response.getStatusCode());
+
+        return response;
 
     }
 }
