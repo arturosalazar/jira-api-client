@@ -1,5 +1,6 @@
 package com.arturosalazar.jira_api_client.services;
 
+import com.arturosalazar.jira_api_client.dto.JiraIssueDetailResponse;
 import com.arturosalazar.jira_api_client.dto.JiraIssueRequest;
 import com.arturosalazar.jira_api_client.dto.JiraIssueResponse;
 import com.arturosalazar.jira_api_client.entities.JiraIssueEntity;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JiraIssueService {
@@ -103,5 +106,14 @@ public class JiraIssueService {
 
         return response;
 
+    }
+
+    public List<JiraIssueDetailResponse> getJiraIssues() {
+        List<JiraIssueDetailResponse> response = jiraIssueRepository
+                .findAll()
+                .stream()
+                .map(entity -> new JiraIssueDetailResponse(entity))
+                .collect(Collectors.toList());
+        return response;
     }
 }
